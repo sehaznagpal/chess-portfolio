@@ -116,3 +116,4 @@ input[type="text"] {
   border-radius: 0;
 }
 input[type="text"]::placeholder { color: rgba(18,18,18,0.4); }
+input[type="text"].input-on-dark::placeholder { color: rgba(245,245,245,0.55); }

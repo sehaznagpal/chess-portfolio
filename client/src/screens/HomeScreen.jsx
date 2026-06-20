@@ -21,10 +21,14 @@ const checkerStripStyle = {
   backgroundSize: 'clamp(22px, 3vw, 40px) clamp(22px, 3vw, 40px)',
 };
 
-export default function HomeScreen({ socket, theme, onThemeChange, pieceStyle, onPieceStyleChange }) {
+export default function HomeScreen({
+  socket, theme, onThemeChange, pieceStyle, onPieceStyleChange,
+  isWaiting, roomCode, onCancelWaiting,
+}) {
   const [name, setName] = useState('');
   const [code, setCode] = useState('');
   const [error, setError] = useState('');
+  const [copied, setCopied] = useState(false);
 
   const handleSubmit = () => {
     const trimmedName = name.trim();
@@ -37,6 +41,13 @@ export default function HomeScreen({ socket, theme, onThemeChange, pieceStyle, o
     } else {
       socket.emit('create_room', { name: trimmedName });
     }
+  };
+
+  const copyCode = () => {
+    navigator.clipboard.writeText(roomCode).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
   };
 
   return (
@@ -89,48 +100,88 @@ export default function HomeScreen({ socket, theme, onThemeChange, pieceStyle, o
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 12, position: 'relative', zIndex: 1 }}>
             <input
               type="text"
+              className="input-on-dark"
               placeholder="Enter Your Name"
               value={name}
               onChange={e => setName(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleSubmit()}
               maxLength={24}
+              disabled={isWaiting}
               style={{ background: 'transparent', borderColor: '#f5f5f5', color: '#f5f5f5' }}
             />
             <input
               type="text"
+              className="input-on-dark"
               placeholder="Enter Room Name (leave blank to create)"
               value={code}
               onChange={e => setCode(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleSubmit()}
               maxLength={32}
+              disabled={isWaiting}
               style={{ background: 'transparent', borderColor: '#f5f5f5', color: '#f5f5f5', textTransform: 'lowercase' }}
             />
-            {/* Decorative placeholder — the real room link only exists once a room
-                has been created, shown on the waiting screen. Styled distinctly
-                (monospace, no border) so it doesn't read as a real input. */}
-            <div style={{
-              fontFamily: 'monospace', fontSize: 16, color: 'rgba(245,245,245,0.45)',
-              padding: '8px 10px', display: 'flex', alignItems: 'center', gap: 8,
-            }}>
-              {'<Link>'}
-              <span style={{ fontSize: 13, opacity: 0.7 }}>appears after creating a room</span>
-            </div>
+
+            {isWaiting ? (
+              /* Real room code/link now that one exists, shown right here
+                 instead of navigating to a separate screen. */
+              <div
+                onClick={copyCode}
+                title="Click to copy"
+                style={{
+                  fontFamily: 'monospace', fontSize: 16, color: '#f5f5f5',
+                  padding: '8px 10px', display: 'flex', alignItems: 'center', gap: 8,
+                  cursor: 'pointer', border: '1px solid rgba(245,245,245,0.4)',
+                  flexWrap: 'wrap',
+                }}
+              >
+                {roomCode}
+                <span style={{ fontSize: 13, opacity: 0.75 }}>{copied ? 'Copied!' : '📋 click to copy'}</span>
+              </div>
+            ) : (
+              /* Decorative placeholder — becomes the real code/link above
+                 once a room exists. */
+              <div style={{
+                fontFamily: 'monospace', fontSize: 16, color: 'rgba(245,245,245,0.45)',
+                padding: '8px 10px', display: 'flex', alignItems: 'center', gap: 8,
+              }}>
+                {'<Link>'}
+                <span style={{ fontSize: 13, opacity: 0.7 }}>appears after creating a room</span>
+              </div>
+            )}
           </div>
 
           {error && (
             <p style={{ color: '#ff9b9b', fontFamily: 'Poppins, sans-serif', fontSize: 14, marginBottom: 8, position: 'relative', zIndex: 1 }}>{error}</p>
           )}
 
+          {isWaiting && (
+            <p style={{ fontFamily: 'Poppins, sans-serif', fontSize: 15, color: 'rgba(245,245,245,0.8)', margin: '0 0 8px', position: 'relative', zIndex: 1 }}>
+              Waiting for opponent…
+            </p>
+          )}
+
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: 'auto', paddingTop: 16, position: 'relative', zIndex: 1 }}>
-            <button
-              onClick={handleSubmit}
-              style={{
-                fontSize: 'clamp(16px, 2.2vw, 20px)', padding: '8px 24px',
-                background: '#f5f5f5', color: '#351e28', border: '1px solid #f5f5f5',
-              }}
-            >
-              Create/join room
-            </button>
+            {isWaiting ? (
+              <button
+                onClick={onCancelWaiting}
+                style={{
+                  fontSize: 'clamp(16px, 2.2vw, 20px)', padding: '8px 24px',
+                  background: 'transparent', color: '#f5f5f5', border: '1px solid #f5f5f5',
+                }}
+              >
+                Cancel
+              </button>
+            ) : (
+              <button
+                onClick={handleSubmit}
+                style={{
+                  fontSize: 'clamp(16px, 2.2vw, 20px)', padding: '8px 24px',
+                  background: '#f5f5f5', color: '#351e28', border: '1px solid #f5f5f5',
+                }}
+              >
+                Create/join room
+              </button>
+            )}
           </div>
         </div>
 
@@ -142,7 +193,8 @@ export default function HomeScreen({ socket, theme, onThemeChange, pieceStyle, o
           width: 'min(94vw, 480px)',
           boxSizing: 'border-box',
           padding: 'clamp(24px, 4vw, 40px) clamp(20px, 4vw, 36px)',
-          display: 'flex', flexDirection: 'column',
+          display: 'flex', flexDirection: 'column', alignItems: 'center',
+          textAlign: 'center',
         }}>
           {/* Black king + queen perched on bottom-right corner */}
           <img src={blackChess} alt="" style={{
@@ -165,11 +217,11 @@ export default function HomeScreen({ socket, theme, onThemeChange, pieceStyle, o
           </h2>
 
           {/* Board theme picker */}
-          <div style={{ marginBottom: 20, position: 'relative', zIndex: 1 }}>
-            <p style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(14px, 2vw, 16px)', color: '#f5f5f5', margin: '0 0 10px' }}>
+          <div style={{ marginBottom: 20, position: 'relative', zIndex: 1, width: '100%' }}>
+            <p style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(14px, 2vw, 16px)', color: '#f5f5f5', margin: '0 0 10px', textAlign: 'center' }}>
               Board Theme:
             </p>
-            <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap', justifyContent: 'center' }}>
               {THEME_SWATCHES.map(({ name: n, label, dark, light }) => {
                 const isActive = theme === n;
                 return (
@@ -201,11 +253,11 @@ export default function HomeScreen({ socket, theme, onThemeChange, pieceStyle, o
           </div>
 
           {/* Piece style picker */}
-          <div style={{ marginBottom: 12, position: 'relative', zIndex: 1 }}>
-            <p style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(14px, 2vw, 16px)', color: '#f5f5f5', margin: '0 0 10px' }}>
+          <div style={{ marginBottom: 12, position: 'relative', zIndex: 1, width: '100%' }}>
+            <p style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(14px, 2vw, 16px)', color: '#f5f5f5', margin: '0 0 10px', textAlign: 'center' }}>
               Chess Piece Type:
             </p>
-            <div style={{ display: 'flex', gap: 22, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 22, flexWrap: 'wrap', justifyContent: 'center' }}>
               {PIECE_STYLE_NAMES.map((styleName) => {
                 const isActive = pieceStyle === styleName;
                 const previewSrc = PIECE_SETS[styleName].wn;
@@ -235,7 +287,7 @@ export default function HomeScreen({ socket, theme, onThemeChange, pieceStyle, o
             </div>
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 'auto', paddingTop: 16, position: 'relative', zIndex: 1 }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 'auto', paddingTop: 16, position: 'relative', zIndex: 1, width: '100%' }}>
             <button
               onClick={handleSubmit}
               style={{

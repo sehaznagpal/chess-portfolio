@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import LoadingScreen from './screens/LoadingScreen.jsx';
 import HomeScreen from './screens/HomeScreen.jsx';
-import WaitingScreen from './screens/WaitingScreen.jsx';
 import GameScreen from './screens/GameScreen.jsx';
 import ResultScreen from './screens/ResultScreen.jsx';
 import { applyTheme } from './lib/themes.js';
@@ -96,6 +95,7 @@ export default function App() {
   const [lastMove, setLastMove] = useState(null);
   const [gameResult, setGameResult] = useState(null);
   const [waitingForRematch, setWaitingForRematch] = useState(false);
+  const [isWaitingForOpponent, setIsWaitingForOpponent] = useState(false);
   const [toastMsg, setToastMsg] = useState(null);
 
   useEffect(() => { applyTheme(theme); }, [theme]);
@@ -144,7 +144,8 @@ export default function App() {
   useEffect(() => {
     const onRoomCreated = ({ code }) => {
       setRoomCode(code);
-      setScreen('waiting');
+      setIsWaitingForOpponent(true);
+      // Stay on the home screen — the room code now shows inline there.
     };
 
     const onJoinError = ({ message }) => showToast(message);
@@ -163,6 +164,7 @@ export default function App() {
       setGameResult(null);
       setWaitingForRematch(false);
       setRoomCode(rc);
+      setIsWaitingForOpponent(false);
       setScreen('game');
       saveSession({ roomCode: rc, playerColor: color, playerName: pName, opponentName: oName, startedAt: Date.now() });
     };
@@ -299,7 +301,7 @@ export default function App() {
 
   const handleCancelWaiting = () => {
     socket.emit('go_home');
-    setScreen('home');
+    setIsWaitingForOpponent(false);
     setRoomCode('');
   };
 
@@ -326,10 +328,10 @@ export default function App() {
           onThemeChange={handleThemeChange}
           pieceStyle={pieceStyle}
           onPieceStyleChange={handlePieceStyleChange}
+          isWaiting={isWaitingForOpponent}
+          roomCode={roomCode}
+          onCancelWaiting={handleCancelWaiting}
         />
-      )}
-      {screen === 'waiting' && (
-        <WaitingScreen roomCode={roomCode} onCancel={handleCancelWaiting} />
       )}
       {screen === 'game' && (
         <GameScreen
