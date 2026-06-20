@@ -55,16 +55,30 @@ function clearSession() {
   try { localStorage.removeItem(STORAGE_KEY); } catch {}
 }
 
+// Theme/piece-style are personal display preferences, but they're still
+// namespaced per-tab (like the game session) so two tabs in one browser
+// testing as two different players don't stomp on each other's choice.
+const THEME_KEY = `chess_theme_${getTabId()}`;
+const PIECE_STYLE_KEY = `chess_piece_style_${getTabId()}`;
+
+function loadTheme() {
+  try {
+    return localStorage.getItem(THEME_KEY) || 'watermelon';
+  } catch {
+    return 'watermelon';
+  }
+}
+
 function loadPieceStyle() {
   try {
-    return localStorage.getItem('chess_piece_style') || 'geometric';
+    return localStorage.getItem(PIECE_STYLE_KEY) || 'geometric';
   } catch {
     return 'geometric';
   }
 }
 
 export default function App() {
-  const [theme, setTheme] = useState('watermelon');
+  const [theme, setTheme] = useState(loadTheme);
   const [pieceStyle, setPieceStyle] = useState(loadPieceStyle);
   const [screen, setScreen] = useState('home');
 
@@ -85,28 +99,38 @@ export default function App() {
 
   useEffect(() => { applyTheme(theme); }, [theme]);
 
-  function handlePieceStyleChange(style) {
-    setPieceStyle(style);
-    try { localStorage.setItem('chess_piece_style', style); } catch {}
+  function handleThemeChange(t) {
+    setTheme(t);
+    try { localStorage.setItem(THEME_KEY, t); } catch {}
   }
 
-  // Connect + attempt rejoin from localStorage on startup
+  function handlePieceStyleChange(style) {
+    setPieceStyle(style);
+    try { localStorage.setItem(PIECE_STYLE_KEY, style); } catch {}
+  }
+
+  // Connect, and re-announce ourselves to the server on every connection
+  // (not just the first one). Tabs get throttled/suspended in the background
+  // for minutes at a time, which can silently drop and reconnect the
+  // underlying socket with a new id — without this, the server would think
+  // the player vanished and eventually end the game out from under them.
   useEffect(() => {
     socket.connect();
 
-    const session = loadSession();
-    if (session) {
-      const tryRejoin = () => {
+    const tryRejoin = () => {
+      const session = loadSession();
+      if (session) {
         socket.emit('rejoin_room', { code: session.roomCode, color: session.playerColor });
-      };
-      if (socket.connected) {
-        tryRejoin();
-      } else {
-        socket.once('connect', tryRejoin);
       }
-    }
+    };
 
-    return () => socket.disconnect();
+    socket.on('connect', tryRejoin);
+    if (socket.connected) tryRejoin();
+
+    return () => {
+      socket.off('connect', tryRejoin);
+      socket.disconnect();
+    };
   }, []);
 
   useEffect(() => {
@@ -281,7 +305,7 @@ export default function App() {
         <HomeScreen
           socket={socket}
           theme={theme}
-          onThemeChange={t => setTheme(t)}
+          onThemeChange={handleThemeChange}
           pieceStyle={pieceStyle}
           onPieceStyleChange={handlePieceStyleChange}
         />

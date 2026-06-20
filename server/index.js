@@ -34,8 +34,13 @@ function generateCode(rooms) {
 // ── Piece point values ────────────────────────────────────────────────────────
 const PIECE_VALUES = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 };
 
-// How long (ms) to wait for a disconnected player to reconnect before ending the game
-const RECONNECT_WINDOW_MS = 60 * 1000;
+// How long (ms) to wait for a disconnected player to reconnect before ending
+// the game. Matches the client's session TTL: a tab going inactive/backgrounded
+// for a few minutes (common — browsers throttle background tabs, which can
+// silently drop the socket) should never end the game on its own. Only an
+// explicit resign, checkmate/stalemate/draw, or this window actually elapsing
+// should end it.
+const RECONNECT_WINDOW_MS = 60 * 60 * 1000;
 
 // ── Rooms map ─────────────────────────────────────────────────────────────────
 const rooms = new Map();
@@ -126,6 +131,12 @@ io.on('connection', (socket) => {
       return;
     }
 
+    // Was this player actually away (pending disconnect timer, or a
+    // different underlying socket), or is this just a redundant
+    // re-announce from the client? Only the former is worth telling the
+    // opponent about.
+    const wasAway = !!player.reconnectTimer || player.socketId !== socket.id;
+
     // Cancel the reconnect timeout if it's running
     if (player.reconnectTimer) {
       clearTimeout(player.reconnectTimer);
@@ -154,8 +165,9 @@ io.on('connection', (socket) => {
       startedAt: room.startedAt,
     });
 
-    // Tell the opponent their partner is back
-    if (opponent && opponent.socketId) {
+    // Tell the opponent their partner is back, but only if they were
+    // actually away — otherwise this fires on every harmless re-sync.
+    if (wasAway && opponent && opponent.socketId) {
       io.to(opponent.socketId).emit('opponent_reconnected');
     }
   });

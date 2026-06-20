@@ -124,7 +124,7 @@ export default function GameScreen({
         <div style={{ width: '100%', display: 'flex', alignItems: 'center', padding: '14px 20px 6px', flexShrink: 0, gap: 6 }}>
 
           {/* Resign X — top left */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+          <div style={{ width: 100, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 6 }}>
             <button
               onClick={() => setShowResignConfirm(true)}
               title="Resign"
@@ -153,7 +153,7 @@ export default function GameScreen({
           </span>
 
           {/* Right: ? and gear */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+          <div style={{ width: 100, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 6 }}>
             <button
               className="btn-round"
               onClick={() => setShowHelp(true)}
@@ -219,6 +219,12 @@ export default function GameScreen({
 
         {/* ── Bottom bar ─────────────────────────────────────── */}
         <div style={{ width: '100%', display: 'flex', alignItems: 'center', padding: '6px 20px 14px', flexShrink: 0, gap: 6 }}>
+          {/* Invisible spacer matching the pill's width, so the name centers against it */}
+          <div aria-hidden style={{ width: 140, flexShrink: 0, visibility: 'hidden', display: 'flex', alignItems: 'center', gap: 6, padding: '4px 8px' }}>
+            <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: 13, whiteSpace: 'nowrap' }}>My Points</span>
+            <span style={{ fontFamily: 'Atelier, sans-serif', fontSize: 18, whiteSpace: 'nowrap' }}>{netDisplay}</span>
+          </div>
+
           <span style={{
             flex: 1, minWidth: 0, textAlign: 'center',
             fontFamily: 'Atelier, sans-serif', fontSize: 'clamp(16px, 2.5vw, 30px)', textTransform: 'uppercase', color: 'var(--ink)',
@@ -229,8 +235,8 @@ export default function GameScreen({
 
           {/* Net points pill */}
           <div style={{
-            flexShrink: 0,
-            display: 'flex', alignItems: 'center', gap: 6,
+            width: 140, flexShrink: 0,
+            display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 6,
             background: pillBg, border: `1.5px solid ${netPoints < 0 ? '#c04040' : 'var(--ink)'}`,
             padding: '4px 8px',
           }}>

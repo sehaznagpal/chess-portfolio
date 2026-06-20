@@ -53,6 +53,7 @@ export default function HomeScreen({ socket, theme, onThemeChange, pieceStyle, o
           lineHeight: 1,
           marginBottom: 24,
           overflowWrap: 'break-word',
+          textAlign: 'center',
         }}>
           Game Of Chess
         </h1>
