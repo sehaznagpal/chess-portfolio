@@ -99,6 +99,8 @@ export default function GameScreen({
 
   const myTurn = (playerColor === 'white' && chess.turn() === 'w') ||
                  (playerColor === 'black' && chess.turn() === 'b');
+  const isCheckmateNow = chess.isCheckmate();
+  const isCheckNow = !isCheckmateNow && chess.inCheck();
 
   // Net point difference: positive = I'm winning material, negative = losing
   const netPoints = myPoints - opponentPoints;
@@ -186,9 +188,13 @@ export default function GameScreen({
 
         {/* Turn indicator */}
         <div style={{ height: 18, marginBottom: 3, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          {myTurn
-            ? <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: 12, color: 'var(--ink)', fontWeight: 600, letterSpacing: 0.5 }}>YOUR TURN</span>
-            : <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: 12, color: 'rgba(18,18,18,0.45)' }}>Opponent's turn…</span>
+          {isCheckmateNow
+            ? <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: 12, color: '#830406', fontWeight: 700, letterSpacing: 0.5 }}>CHECKMATE</span>
+            : isCheckNow
+              ? <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: 12, color: '#830406', fontWeight: 700, letterSpacing: 0.5 }}>CHECK</span>
+              : myTurn
+                ? <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: 12, color: 'var(--ink)', fontWeight: 600, letterSpacing: 0.5 }}>YOUR TURN</span>
+                : <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: 12, color: 'rgba(18,18,18,0.45)' }}>Opponent's turn…</span>
           }
         </div>
 

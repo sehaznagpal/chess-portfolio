@@ -2,7 +2,7 @@ import Piece from './Piece.jsx';
 
 export default function Square({
   file, rank, piece, isLight, isSelected, isLegalMove, isCapture, isLastMove,
-  showGuide, showLabels, playerColor, onSquareClick, pieceStyle,
+  isCheckKing, isCheckmateKing, showGuide, showLabels, playerColor, onSquareClick, pieceStyle,
 }) {
   const sq = `${file}${rank}`;
 
@@ -10,7 +10,15 @@ export default function Square({
   let outline = 'none';
   let boxShadow = 'none';
 
-  if (isSelected) {
+  if (isCheckmateKing) {
+    // Same red used for "capturable" squares, but at half visibility —
+    // the king is in checkmate, not merely threatened.
+    bg = 'rgba(131, 4, 6, 0.5)';
+    outline = '2px solid #121212';
+  } else if (isCheckKing) {
+    bg = '#830406';
+    outline = '2px solid #121212';
+  } else if (isSelected) {
     outline = '4px solid #121212';
     boxShadow = 'inset 0 0 20px 10px rgba(0,0,0,0.25)';
   } else if (showGuide && isCapture) {

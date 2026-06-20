@@ -214,8 +214,17 @@ export default function App() {
 
     const onGameOver = ({ outcome, reason }) => {
       clearSession();
-      setGameResult({ outcome, reason });
-      setScreen('result');
+      if (reason === 'checkmate') {
+        // Let the board sit on the checkmate position (with the king's
+        // square highlighted) for a bit before jumping to the result screen.
+        setTimeout(() => {
+          setGameResult({ outcome, reason });
+          setScreen('result');
+        }, 30000);
+      } else {
+        setGameResult({ outcome, reason });
+        setScreen('result');
+      }
     };
 
     const onOpponentDisconnected = () => {
