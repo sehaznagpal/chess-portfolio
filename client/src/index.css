@@ -1,0 +1,105 @@
+/* ── Fonts ──────────────────────────────────────────────────────────────────── */
+@font-face {
+  font-family: 'Atelier';
+  src: url('./assets/fonts/Atelier.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('./assets/fonts/Poppins-Regular.ttf') format('truetype');
+  font-weight: 400;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('./assets/fonts/Poppins-Medium.ttf') format('truetype');
+  font-weight: 500;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('./assets/fonts/Poppins-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('./assets/fonts/Poppins-Bold.ttf') format('truetype');
+  font-weight: 700;
+}
+
+/* ── Reset ──────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { width: 100%; height: 100%; }
+#root { width: 100%; height: 100%; }
+
+body {
+  font-family: 'Poppins', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+/* ── CSS Custom Properties (watermelon defaults) ────────────────────────────── */
+:root {
+  --bgLight: #e3fdad;
+  --boardDark: #095256;
+  --boardLight: #86a873;
+  --boardBorder: #636363;
+  --accent: #c1ff40;
+  --accent2: #f7567c;
+  --ink: #121212;
+  --surface: #f5f5f5;
+  --board-size: clamp(min(440px, 92vw), min(78vh, 92vw), 760px);
+}
+
+/* ── Checkerboard background ─────────────────────────────────────────────────── */
+.checker-bg {
+  background-color: #1e330a;
+  background-image: repeating-conic-gradient(#1e330a 0% 25%, #839a28 0% 50%);
+  background-size: calc(100% / 14) calc(100% / 10);
+}
+
+/* ── Noise overlay for game screen ──────────────────────────────────────────── */
+.game-noise-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 300px 300px;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────────── */
+button {
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  border: 1.5px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  padding: 6px 12px;
+  font-size: 18px;
+  border-radius: 0;
+  line-height: 1.2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+button.btn-primary { background: var(--accent); }
+button.btn-round { border-radius: 999px; }
+button:hover { opacity: 0.8; }
+button:active { opacity: 0.65; }
+
+/* ── Inputs ──────────────────────────────────────────────────────────────────── */
+input[type="text"] {
+  font-family: 'Poppins', sans-serif;
+  border: 1.5px solid var(--ink);
+  background: var(--surface);
+  color: var(--ink);
+  padding: 8px 10px;
+  font-size: 18px;
+  outline: none;
+  width: 100%;
+  border-radius: 0;
+}
+input[type="text"]::placeholder { color: rgba(18,18,18,0.4); }
