@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
+import LoadingScreen from './screens/LoadingScreen.jsx';
 import HomeScreen from './screens/HomeScreen.jsx';
 import WaitingScreen from './screens/WaitingScreen.jsx';
 import GameScreen from './screens/GameScreen.jsx';
@@ -80,7 +81,7 @@ function loadPieceStyle() {
 export default function App() {
   const [theme, setTheme] = useState(loadTheme);
   const [pieceStyle, setPieceStyle] = useState(loadPieceStyle);
-  const [screen, setScreen] = useState('home');
+  const [screen, setScreen] = useState('loading');
 
   const [roomCode, setRoomCode] = useState('');
   const [playerName, setPlayerName] = useState('');
@@ -98,6 +99,13 @@ export default function App() {
   const [toastMsg, setToastMsg] = useState(null);
 
   useEffect(() => { applyTheme(theme); }, [theme]);
+
+  // The loading screen only advances when its button is clicked — see
+  // handleEnterFromLoading below. If a rejoin completes first (see the
+  // socket effect below), it will have already moved us to 'game' itself.
+  function handleEnterFromLoading() {
+    setScreen(s => (s === 'loading' ? 'home' : s));
+  }
 
   function handleThemeChange(t) {
     setTheme(t);
@@ -310,6 +318,7 @@ export default function App() {
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+      {screen === 'loading' && <LoadingScreen onEnter={handleEnterFromLoading} />}
       {screen === 'home' && (
         <HomeScreen
           socket={socket}
