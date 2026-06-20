@@ -13,7 +13,7 @@ export default function LoadingScreen({ onEnter }) {
       <div style={{
         position: 'absolute',
         top: '-40%',
-        left: '65%',
+        left: '58%',
         width: 'clamp(90px, 14vw, 200px)',
         height: '220%',
         transform: 'translateX(-50%) rotate(-18deg)',

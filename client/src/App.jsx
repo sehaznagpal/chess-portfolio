@@ -77,10 +77,28 @@ function loadPieceStyle() {
   }
 }
 
+// The loading screen is a one-time welcome splash, not a real app state —
+// it should never reappear on a refresh (that would risk looking like
+// progress was lost). sessionStorage survives refresh but is private to
+// this tab, so "seen once this tab" is exactly the right scope.
+const INTRO_SEEN_KEY = 'chess_intro_seen';
+
+function loadInitialScreen() {
+  try {
+    return sessionStorage.getItem(INTRO_SEEN_KEY) ? 'home' : 'loading';
+  } catch {
+    return 'loading';
+  }
+}
+
+function markIntroSeen() {
+  try { sessionStorage.setItem(INTRO_SEEN_KEY, '1'); } catch {}
+}
+
 export default function App() {
   const [theme, setTheme] = useState(loadTheme);
   const [pieceStyle, setPieceStyle] = useState(loadPieceStyle);
-  const [screen, setScreen] = useState('loading');
+  const [screen, setScreen] = useState(loadInitialScreen);
 
   const [roomCode, setRoomCode] = useState('');
   const [playerName, setPlayerName] = useState('');
@@ -104,6 +122,7 @@ export default function App() {
   // handleEnterFromLoading below. If a rejoin completes first (see the
   // socket effect below), it will have already moved us to 'game' itself.
   function handleEnterFromLoading() {
+    markIntroSeen();
     setScreen(s => (s === 'loading' ? 'home' : s));
   }
 
