@@ -28,8 +28,8 @@ export default function LoadingScreen({ onEnter }) {
         src={whiteSide}
         alt=""
         style={{
-          position: 'absolute', top: 'clamp(-50px, -6vw, -24px)', right: 'clamp(-60px, -8vw, -24px)',
-          width: 'clamp(252px, 41.4vw, 558px)',
+          position: 'absolute', top: 'clamp(-20px, -2.5vw, -6px)', right: 'clamp(-30px, -4vw, -10px)',
+          width: 'clamp(222px, 36.4vw, 491px)',
           height: 'auto',
           objectFit: 'contain',
           objectPosition: 'top right',
@@ -63,7 +63,7 @@ export default function LoadingScreen({ onEnter }) {
       }}>
         <p style={{
           fontFamily: 'Atelier, sans-serif',
-          fontSize: 'clamp(40px, 9vw, 132px)',
+          fontSize: 'clamp(36px, 8.1vw, 119px)',
           lineHeight: 0.8,
           margin: 0,
           color: '#f5f5f5',
@@ -75,7 +75,7 @@ export default function LoadingScreen({ onEnter }) {
           fontFamily: 'Poppins, sans-serif',
           fontStyle: 'italic',
           fontWeight: 300,
-          fontSize: 'clamp(16px, 3.9vw, 56px)',
+          fontSize: 'clamp(14px, 3.5vw, 50px)',
           lineHeight: 0.8,
           color: '#121212',
           margin: 0,
@@ -85,7 +85,7 @@ export default function LoadingScreen({ onEnter }) {
         </p>
         <p style={{
           fontFamily: 'Atelier, sans-serif',
-          fontSize: 'clamp(54px, 12.5vw, 180px)',
+          fontSize: 'clamp(49px, 11.25vw, 162px)',
           lineHeight: 0.8,
           margin: 'clamp(-22px, -3.4vw, -10px) 0 0',
           color: '#121212',
