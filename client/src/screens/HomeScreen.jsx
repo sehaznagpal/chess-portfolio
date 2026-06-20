@@ -63,7 +63,7 @@ export default function HomeScreen({ socket, theme, onThemeChange, pieceStyle, o
           <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: 16, color: '#121212', flexShrink: 0 }}>
             Board Theme:
           </span>
-          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
             {THEME_SWATCHES.map(({ name: n, label, dark, light }) => {
               const isActive = theme === n;
               return (
@@ -99,7 +99,7 @@ export default function HomeScreen({ socket, theme, onThemeChange, pieceStyle, o
           <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: 16, color: '#121212', flexShrink: 0 }}>
             Chess Piece Type:
           </span>
-          <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
             {PIECE_STYLE_NAMES.map((styleName) => {
               const isActive = pieceStyle === styleName;
               const previewSrc = PIECE_SETS[styleName].wn;

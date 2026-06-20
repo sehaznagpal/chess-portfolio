@@ -219,9 +219,10 @@ export default function GameScreen({
 
         {/* ── Bottom bar ─────────────────────────────────────── */}
         <div style={{ width: '100%', display: 'flex', alignItems: 'center', padding: '6px 20px 14px', flexShrink: 0, gap: 6 }}>
-          {/* Invisible spacer matching the pill's width, so the name centers against it */}
-          <div aria-hidden style={{ width: 140, flexShrink: 0, visibility: 'hidden', display: 'flex', alignItems: 'center', gap: 6, padding: '4px 8px' }}>
-            <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: 13, whiteSpace: 'nowrap' }}>My Points</span>
+          {/* Invisible spacer with identical content to the pill, so it naturally
+              matches the pill's width and the name centers against it exactly */}
+          <div aria-hidden style={{ flexShrink: 0, visibility: 'hidden', display: 'flex', alignItems: 'center', gap: 6, padding: '4px 8px', border: '1.5px solid transparent' }}>
+            <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: 13, fontWeight: 500, whiteSpace: 'nowrap' }}>My Points</span>
             <span style={{ fontFamily: 'Atelier, sans-serif', fontSize: 18, whiteSpace: 'nowrap' }}>{netDisplay}</span>
           </div>
 
@@ -235,8 +236,8 @@ export default function GameScreen({
 
           {/* Net points pill */}
           <div style={{
-            width: 140, flexShrink: 0,
-            display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 6,
+            flexShrink: 0,
+            display: 'flex', alignItems: 'center', gap: 6,
             background: pillBg, border: `1.5px solid ${netPoints < 0 ? '#c04040' : 'var(--ink)'}`,
             padding: '4px 8px',
           }}>
