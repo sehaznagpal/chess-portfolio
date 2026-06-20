@@ -28,7 +28,7 @@ export default function LoadingScreen({ onEnter }) {
         src={whiteSide}
         alt=""
         style={{
-          position: 'absolute', top: 'clamp(-10px, -1vw, 0px)', right: 'clamp(-30px, -4vw, -10px)',
+          position: 'absolute', top: 'clamp(-50px, -6vw, -24px)', right: 'clamp(-60px, -8vw, -24px)',
           width: 'clamp(252px, 41.4vw, 558px)',
           height: 'auto',
           objectFit: 'contain',
@@ -87,7 +87,7 @@ export default function LoadingScreen({ onEnter }) {
           fontFamily: 'Atelier, sans-serif',
           fontSize: 'clamp(54px, 12.5vw, 180px)',
           lineHeight: 0.8,
-          margin: 0,
+          margin: 'clamp(-22px, -3.4vw, -10px) 0 0',
           color: '#121212',
           WebkitTextStroke: 'clamp(1px, 0.18vw, 2.5px) #f5f5f5',
         }}>
