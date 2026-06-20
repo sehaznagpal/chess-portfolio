@@ -13,7 +13,7 @@ export default function LoadingScreen({ onEnter }) {
       <div style={{
         position: 'absolute',
         top: '-40%',
-        left: '50%',
+        left: '65%',
         width: 'clamp(90px, 14vw, 200px)',
         height: '220%',
         transform: 'translateX(-50%) rotate(-18deg)',
@@ -101,7 +101,8 @@ export default function LoadingScreen({ onEnter }) {
         style={{
           position: 'absolute', bottom: 'clamp(20px, 4vh, 40px)', right: 'clamp(20px, 5vw, 56px)',
           background: '#383838',
-          border: 'none',
+          border: '2px solid #f5f5f5',
+          boxShadow: '3px 4px 0 rgba(0,0,0,0.4)',
           padding: 'clamp(8px, 1.3vw, 12px) clamp(14px, 2vw, 18px)',
           cursor: 'pointer',
           zIndex: 2,
