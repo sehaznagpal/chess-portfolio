@@ -9,7 +9,7 @@ export default function LoadingScreen({ onEnter }) {
       position: 'relative',
       overflow: 'hidden',
     }}>
-      {/* Diagonal checker stripe, corner to corner */}
+      {/* Diagonal checker stripe, corner to corner — behind everything else */}
       <div style={{
         position: 'absolute',
         top: '-40%',
@@ -20,21 +20,22 @@ export default function LoadingScreen({ onEnter }) {
         backgroundColor: '#1e1e1e',
         backgroundImage: 'repeating-conic-gradient(#1e1e1e 0% 25%, #f5f5f5 0% 50%)',
         backgroundSize: 'clamp(22px, 3.2vw, 44px) clamp(22px, 3.2vw, 44px)',
-        zIndex: 1,
+        zIndex: 0,
       }} />
 
-      {/* White-pieces chariot, upper right */}
+      {/* White-pieces chariot, top right corner — most of it kept on-screen */}
       <img
         src={whiteSide}
         alt=""
         style={{
-          position: 'absolute', top: 0, right: 0,
-          width: 'clamp(280px, 46vw, 620px)',
+          position: 'absolute', top: 'clamp(-10px, -1vw, 0px)', right: 'clamp(-30px, -4vw, -10px)',
+          width: 'clamp(252px, 41.4vw, 558px)',
           height: 'auto',
           objectFit: 'contain',
           objectPosition: 'top right',
           pointerEvents: 'none',
           userSelect: 'none',
+          zIndex: 1,
         }}
       />
 
@@ -44,12 +45,13 @@ export default function LoadingScreen({ onEnter }) {
         alt=""
         style={{
           position: 'absolute', bottom: 0, left: 0,
-          width: 'clamp(280px, 46vw, 620px)',
+          width: 'clamp(252px, 41.4vw, 558px)',
           height: 'auto',
           objectFit: 'contain',
           objectPosition: 'bottom left',
           pointerEvents: 'none',
           userSelect: 'none',
+          zIndex: 1,
         }}
       />
 
@@ -62,7 +64,7 @@ export default function LoadingScreen({ onEnter }) {
         <p style={{
           fontFamily: 'Atelier, sans-serif',
           fontSize: 'clamp(40px, 9vw, 132px)',
-          lineHeight: 0.95,
+          lineHeight: 0.8,
           margin: 0,
           color: '#f5f5f5',
           WebkitTextStroke: 'clamp(1px, 0.18vw, 2.5px) #121212',
@@ -74,8 +76,9 @@ export default function LoadingScreen({ onEnter }) {
           fontStyle: 'italic',
           fontWeight: 300,
           fontSize: 'clamp(16px, 3.9vw, 56px)',
+          lineHeight: 0.8,
           color: '#121212',
-          margin: 'clamp(2px, 0.6vw, 8px) 0',
+          margin: 0,
           alignSelf: 'center',
         }}>
           OF
@@ -83,7 +86,7 @@ export default function LoadingScreen({ onEnter }) {
         <p style={{
           fontFamily: 'Atelier, sans-serif',
           fontSize: 'clamp(54px, 12.5vw, 180px)',
-          lineHeight: 0.95,
+          lineHeight: 0.8,
           margin: 0,
           color: '#121212',
           WebkitTextStroke: 'clamp(1px, 0.18vw, 2.5px) #f5f5f5',
