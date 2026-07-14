@@ -25,20 +25,30 @@ export default function HomeScreen({
   socket, theme, onThemeChange, pieceStyle, onPieceStyleChange,
   isWaiting, roomCode, onCancelWaiting,
 }) {
+  const [mode, setMode] = useState('create');
   const [name, setName] = useState('');
   const [code, setCode] = useState('');
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
 
+  const switchMode = (m) => {
+    setMode(m);
+    setName('');
+    setCode('');
+    setError('');
+  };
+
   const handleSubmit = () => {
     const trimmedName = name.trim();
-    const trimmedCode = code.trim().toLowerCase();
     if (!trimmedName) { setError('Please enter your name.'); return; }
 
-    setError('');
-    if (trimmedCode) {
+    if (mode === 'join') {
+      const trimmedCode = code.trim().toLowerCase();
+      if (!trimmedCode) { setError('Please enter a room code.'); return; }
+      setError('');
       socket.emit('join_room', { name: trimmedName, code: trimmedCode });
     } else {
+      setError('');
       socket.emit('create_room', { name: trimmedName });
     }
   };
@@ -53,7 +63,7 @@ export default function HomeScreen({
   return (
     <div style={{
       width: '100%', height: '100%',
-      background: '#b7d1ea',
+      background: '#f5f5f5',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       position: 'relative', overflow: 'hidden',
       padding: 'clamp(16px, 4vw, 40px)',
@@ -70,7 +80,7 @@ export default function HomeScreen({
         {/* ── Create or Join box ──────────────────────────────────── */}
         <div className="grain-texture" style={{
           position: 'relative',
-          background: '#351e28',
+          background: '#161616',
           border: '4px solid #121212',
           width: 'min(94vw, 480px)',
           boxSizing: 'border-box',
@@ -84,18 +94,41 @@ export default function HomeScreen({
             pointerEvents: 'none', userSelect: 'none', zIndex: 2,
           }} />
 
-          <h2 style={{
-            fontFamily: 'Atelier, sans-serif',
-            fontSize: 'clamp(26px, 5vw, 40px)',
-            textTransform: 'uppercase',
-            letterSpacing: '-0.02em',
-            color: '#f5f5f5',
-            lineHeight: 1,
+          {/* Create / Join tab toggle */}
+          <div style={{
+            display: 'flex', justifyContent: 'space-between',
             margin: 'clamp(16px, 3vw, 26px) 0 clamp(20px, 4vw, 32px)',
             position: 'relative', zIndex: 1,
           }}>
-            Create or Join
-          </h2>
+            <button
+              onClick={() => switchMode('create')}
+              disabled={isWaiting}
+              style={{
+                background: 'transparent', border: 'none', padding: 0,
+                fontFamily: 'Atelier, sans-serif',
+                fontSize: 'clamp(22px, 4.2vw, 34px)',
+                letterSpacing: '-0.02em',
+                lineHeight: 1,
+                color: mode === 'create' ? '#f5f5f5' : 'rgba(245,245,245,0.4)',
+              }}
+            >
+              Create
+            </button>
+            <button
+              onClick={() => switchMode('join')}
+              disabled={isWaiting}
+              style={{
+                background: 'transparent', border: 'none', padding: 0,
+                fontFamily: 'Atelier, sans-serif',
+                fontSize: 'clamp(22px, 4.2vw, 34px)',
+                letterSpacing: '-0.02em',
+                lineHeight: 1,
+                color: mode === 'join' ? '#f5f5f5' : 'rgba(245,245,245,0.4)',
+              }}
+            >
+              Join
+            </button>
+          </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 12, position: 'relative', zIndex: 1 }}>
             <input
@@ -112,7 +145,7 @@ export default function HomeScreen({
             <input
               type="text"
               className="input-on-dark"
-              placeholder="Enter Room Name (leave blank to create)"
+              placeholder={mode === 'join' ? 'Enter Room Code' : 'Enter Room Name'}
               value={code}
               onChange={e => setCode(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleSubmit()}
@@ -121,7 +154,7 @@ export default function HomeScreen({
               style={{ background: 'transparent', borderColor: '#f5f5f5', color: '#f5f5f5', textTransform: 'lowercase' }}
             />
 
-            {isWaiting ? (
+            {mode === 'create' && (isWaiting ? (
               /* Real room code/link now that one exists, shown right here
                  instead of navigating to a separate screen. */
               <div
@@ -147,7 +180,7 @@ export default function HomeScreen({
                 {'<Link>'}
                 <span style={{ fontSize: 13, opacity: 0.7 }}>appears after creating a room</span>
               </div>
-            )}
+            ))}
           </div>
 
           {error && (
@@ -176,10 +209,10 @@ export default function HomeScreen({
                 onClick={handleSubmit}
                 style={{
                   fontSize: 'clamp(16px, 2.2vw, 20px)', padding: '8px 24px',
-                  background: '#f5f5f5', color: '#351e28', border: '1px solid #f5f5f5',
+                  background: '#f5f5f5', color: '#161616', border: '1px solid #f5f5f5',
                 }}
               >
-                Create/join room
+                {mode === 'join' ? 'Join Room' : 'Create Room'}
               </button>
             )}
           </div>
@@ -188,7 +221,7 @@ export default function HomeScreen({
         {/* ── Customise box ───────────────────────────────────────── */}
         <div className="grain-texture" style={{
           position: 'relative',
-          background: '#1f5b25',
+          background: '#161616',
           border: '2px solid #121212',
           width: 'min(94vw, 480px)',
           boxSizing: 'border-box',
@@ -292,7 +325,7 @@ export default function HomeScreen({
               onClick={handleSubmit}
               style={{
                 fontSize: 'clamp(16px, 2.2vw, 20px)', padding: '8px 24px',
-                background: '#f5f5f5', color: '#1f5b25', border: '1px solid #f5f5f5',
+                background: '#f5f5f5', color: '#161616', border: '1px solid #f5f5f5',
               }}
             >
               Enter Room

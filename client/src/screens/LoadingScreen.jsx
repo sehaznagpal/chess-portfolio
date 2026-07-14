@@ -1,11 +1,11 @@
-import whiteSide from '../assets/illustrations/loading-white-side.png';
-import blackSide from '../assets/illustrations/loading-black-side.png';
+import whiteSide from '../assets/illustrations/loading-white-side.svg';
+import blackSide from '../assets/illustrations/loading-black-side.svg';
 
 export default function LoadingScreen({ onEnter }) {
   return (
     <div style={{
       width: '100%', height: '100%',
-      background: '#b7d1ea',
+      background: '#161616',
       position: 'relative',
       overflow: 'hidden',
     }}>
@@ -100,7 +100,7 @@ export default function LoadingScreen({ onEnter }) {
         onClick={onEnter}
         style={{
           position: 'absolute', bottom: 'clamp(20px, 4vh, 40px)', right: 'clamp(20px, 5vw, 56px)',
-          background: '#383838',
+          background: '#4b4b4b',
           border: '2px solid #f5f5f5',
           boxShadow: '3px 4px 0 rgba(0,0,0,0.4)',
           padding: 'clamp(8px, 1.3vw, 12px) clamp(14px, 2vw, 18px)',
