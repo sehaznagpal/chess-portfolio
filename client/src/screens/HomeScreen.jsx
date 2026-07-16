@@ -97,8 +97,8 @@ export default function HomeScreen({
               disabled={isWaiting}
               style={{
                 flex: 1, border: 'none', padding: 'clamp(8px, 1.4vw, 12px) 0',
-                fontFamily: 'Poppins, sans-serif', fontWeight: 600,
-                fontSize: 'clamp(14px, 1.8vw, 18px)',
+                fontFamily: 'Atelier, sans-serif',
+                fontSize: 'clamp(16px, 2vw, 20px)',
                 background: mode === 'create' ? '#f5f5f5' : 'transparent',
                 color: mode === 'create' ? '#161616' : 'rgba(245,245,245,0.45)',
               }}
@@ -111,8 +111,8 @@ export default function HomeScreen({
               style={{
                 flex: 1, borderTop: 'none', borderRight: 'none', borderBottom: 'none',
                 borderLeft: '2px solid #f5f5f5', padding: 'clamp(8px, 1.4vw, 12px) 0',
-                fontFamily: 'Poppins, sans-serif', fontWeight: 600,
-                fontSize: 'clamp(14px, 1.8vw, 18px)',
+                fontFamily: 'Atelier, sans-serif',
+                fontSize: 'clamp(16px, 2vw, 20px)',
                 background: mode === 'join' ? '#f5f5f5' : 'transparent',
                 color: mode === 'join' ? '#161616' : 'rgba(245,245,245,0.45)',
               }}
