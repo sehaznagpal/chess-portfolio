@@ -105,13 +105,13 @@ export default function GameScreen({
   // Net point difference: positive = I'm winning material, negative = losing
   const netPoints = myPoints - opponentPoints;
   const netDisplay = netPoints >= 0 ? `+${netPoints}` : `${netPoints}`;
-  const pillBg = netPoints >= 0 ? 'var(--accent)' : '#EE5151';
-  const pillColor = netPoints >= 0 ? 'var(--ink)' : '#fff';
+  const pillBg = '#121212';
+  const pillColor = '#f5f5f5';
 
   return (
     <div style={{
       width: '100%', height: '100%',
-      background: 'var(--bgLight)',
+      background: '#f5f5f5',
       display: 'flex', flexDirection: 'column',
       alignItems: 'center', justifyContent: 'center',
       position: 'relative', overflow: 'hidden',
@@ -131,15 +131,15 @@ export default function GameScreen({
               onClick={() => setShowResignConfirm(true)}
               title="Resign"
               style={{
-                background: 'transparent', border: '1.5px solid var(--ink)',
-                color: 'var(--ink)', width: 36, height: 36,
+                background: 'transparent', border: 'none',
+                color: 'var(--ink)', padding: 0,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                cursor: 'pointer', borderRadius: 4, fontSize: 18, fontWeight: 700,
-                lineHeight: 1, flexShrink: 0,
+                cursor: 'pointer', fontFamily: 'Atelier, sans-serif', fontSize: 32,
+                textTransform: 'uppercase', lineHeight: 1, flexShrink: 0,
               }}
-            >✕</button>
+            >X</button>
             {opponentPoints > 0 && (
-              <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: 13, color: '#EE5151', fontWeight: 600, whiteSpace: 'nowrap' }}>
+              <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: 13, color: '#636363', fontWeight: 600, whiteSpace: 'nowrap' }}>
                 +{opponentPoints} pts
               </span>
             )}
@@ -159,7 +159,7 @@ export default function GameScreen({
             <button
               className="btn-round"
               onClick={() => setShowHelp(true)}
-              style={{ background: 'var(--accent2)', color: '#f5f5f5', border: '1.5px solid var(--ink)', fontFamily: 'Atelier, sans-serif', fontSize: 22, width: 40, height: 40, padding: 0, borderRadius: '50%', flexShrink: 0 }}
+              style={{ background: 'var(--surface)', color: 'var(--ink)', border: '1.5px solid var(--ink)', fontFamily: 'Atelier, sans-serif', fontSize: 22, width: 40, height: 40, padding: 0, borderRadius: '50%', flexShrink: 0 }}
             >?</button>
             <div ref={settingsRef} style={{ position: 'relative', flexShrink: 0 }}>
               <button
@@ -189,9 +189,9 @@ export default function GameScreen({
         {/* Turn indicator */}
         <div style={{ height: 18, marginBottom: 3, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           {isCheckmateNow
-            ? <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: 12, color: '#830406', fontWeight: 700, letterSpacing: 0.5 }}>CHECKMATE</span>
+            ? <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: 12, color: 'var(--ink)', fontWeight: 700, letterSpacing: 0.5 }}>CHECKMATE</span>
             : isCheckNow
-              ? <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: 12, color: '#830406', fontWeight: 700, letterSpacing: 0.5 }}>CHECK</span>
+              ? <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: 12, color: 'var(--ink)', fontWeight: 700, letterSpacing: 0.5 }}>CHECK</span>
               : myTurn
                 ? <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: 12, color: 'var(--ink)', fontWeight: 600, letterSpacing: 0.5 }}>YOUR TURN</span>
                 : <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: 12, color: 'rgba(18,18,18,0.45)' }}>Opponent's turn…</span>
@@ -212,7 +212,7 @@ export default function GameScreen({
             pieceStyle={pieceStyle}
           />
           {illegalMsg && (
-            <div style={{ position: 'absolute', bottom: -34, left: '50%', transform: 'translateX(-50%)', background: '#830406', color: '#fff', fontFamily: 'Poppins, sans-serif', fontSize: 13, padding: '4px 16px', borderRadius: 4, whiteSpace: 'nowrap', zIndex: 10 }}>
+            <div style={{ position: 'absolute', bottom: -34, left: '50%', transform: 'translateX(-50%)', background: '#121212', color: '#f5f5f5', fontFamily: 'Poppins, sans-serif', fontSize: 13, padding: '4px 16px', borderRadius: 4, whiteSpace: 'nowrap', zIndex: 10 }}>
               {illegalMsg}
             </div>
           )}
@@ -244,7 +244,7 @@ export default function GameScreen({
           <div style={{
             flexShrink: 0,
             display: 'flex', alignItems: 'center', gap: 6,
-            background: pillBg, border: `1.5px solid ${netPoints < 0 ? '#c04040' : 'var(--ink)'}`,
+            background: pillBg, border: '1.5px solid var(--ink)',
             padding: '4px 8px',
           }}>
             <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: 13, color: pillColor, fontWeight: 500, whiteSpace: 'nowrap' }}>My Points</span>
@@ -278,7 +278,7 @@ export default function GameScreen({
               <button
                 className="btn-primary"
                 onClick={() => { onResign(); setShowResignConfirm(false); }}
-                style={{ fontSize: 16, padding: '8px 20px', background: '#EE5151', borderColor: '#c04040', color: '#fff' }}
+                style={{ fontSize: 16, padding: '8px 20px', background: '#121212', borderColor: 'var(--ink)', color: '#f5f5f5' }}
               >
                 Yes, resign
               </button>

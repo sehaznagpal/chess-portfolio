@@ -1,7 +1,5 @@
 import { useState } from 'react';
 import { PIECE_SETS, PIECE_STYLE_NAMES, PIECE_STYLE_LABELS } from '../lib/pieceSets.js';
-import whiteChess from '../assets/illustrations/home-white-chess.png';
-import blackChess from '../assets/illustrations/home-black-chess.png';
 
 // Internal theme keys/values are unchanged — these are just the new
 // display labels for the existing watermelon/strawberry/banana/blueberry
@@ -87,29 +85,22 @@ export default function HomeScreen({
           padding: 'clamp(24px, 4vw, 40px) clamp(20px, 4vw, 36px)',
           display: 'flex', flexDirection: 'column',
         }}>
-          {/* White king + queen perched on top-left corner */}
-          <img src={whiteChess} alt="" style={{
-            position: 'absolute', top: 'clamp(-46px, -6vw, -34px)', left: 'clamp(8px, 2vw, 20px)',
-            width: 'clamp(50px, 8vw, 80px)', height: 'auto',
-            pointerEvents: 'none', userSelect: 'none', zIndex: 2,
-          }} />
-
-          {/* Create / Join tab toggle */}
+          {/* Create / Join segmented toggle */}
           <div style={{
-            display: 'flex', justifyContent: 'space-between',
-            margin: 'clamp(16px, 3vw, 26px) 0 clamp(20px, 4vw, 32px)',
+            display: 'flex',
+            border: '2px solid #f5f5f5',
+            margin: '0 0 clamp(20px, 4vw, 32px)',
             position: 'relative', zIndex: 1,
           }}>
             <button
               onClick={() => switchMode('create')}
               disabled={isWaiting}
               style={{
-                background: 'transparent', border: 'none', padding: 0,
-                fontFamily: 'Atelier, sans-serif',
-                fontSize: 'clamp(22px, 4.2vw, 34px)',
-                letterSpacing: '-0.02em',
-                lineHeight: 1,
-                color: mode === 'create' ? '#f5f5f5' : 'rgba(245,245,245,0.4)',
+                flex: 1, border: 'none', padding: 'clamp(8px, 1.4vw, 12px) 0',
+                fontFamily: 'Poppins, sans-serif', fontWeight: 600,
+                fontSize: 'clamp(14px, 1.8vw, 18px)',
+                background: mode === 'create' ? '#f5f5f5' : 'transparent',
+                color: mode === 'create' ? '#161616' : 'rgba(245,245,245,0.45)',
               }}
             >
               Create
@@ -118,12 +109,12 @@ export default function HomeScreen({
               onClick={() => switchMode('join')}
               disabled={isWaiting}
               style={{
-                background: 'transparent', border: 'none', padding: 0,
-                fontFamily: 'Atelier, sans-serif',
-                fontSize: 'clamp(22px, 4.2vw, 34px)',
-                letterSpacing: '-0.02em',
-                lineHeight: 1,
-                color: mode === 'join' ? '#f5f5f5' : 'rgba(245,245,245,0.4)',
+                flex: 1, borderTop: 'none', borderRight: 'none', borderBottom: 'none',
+                borderLeft: '2px solid #f5f5f5', padding: 'clamp(8px, 1.4vw, 12px) 0',
+                fontFamily: 'Poppins, sans-serif', fontWeight: 600,
+                fontSize: 'clamp(14px, 1.8vw, 18px)',
+                background: mode === 'join' ? '#f5f5f5' : 'transparent',
+                color: mode === 'join' ? '#161616' : 'rgba(245,245,245,0.45)',
               }}
             >
               Join
@@ -229,13 +220,6 @@ export default function HomeScreen({
           display: 'flex', flexDirection: 'column', alignItems: 'center',
           textAlign: 'center',
         }}>
-          {/* Black king + queen perched on bottom-right corner */}
-          <img src={blackChess} alt="" style={{
-            position: 'absolute', bottom: 'clamp(-22px, -3.5vw, -16px)', right: 'clamp(8px, 2vw, 20px)',
-            width: 'clamp(56px, 9vw, 92px)', height: 'auto',
-            pointerEvents: 'none', userSelect: 'none', zIndex: 2,
-          }} />
-
           <h2 style={{
             fontFamily: 'Atelier, sans-serif',
             fontSize: 'clamp(26px, 5vw, 40px)',

@@ -95,7 +95,7 @@ export default function HelpModal({ onClose, pieceStyle = 'geometric' }) {
                 <td style={{ padding: '14px 12px', verticalAlign: 'middle', textAlign: 'center' }}>
                   <span style={{
                     display: 'inline-block',
-                    background: 'var(--accent)', color: 'var(--ink)',
+                    background: '#121212', color: '#f5f5f5',
                     fontFamily: 'Atelier, sans-serif', fontSize: 20,
                     padding: '4px 14px', borderRadius: 999,
                     border: '1px solid var(--ink)',
