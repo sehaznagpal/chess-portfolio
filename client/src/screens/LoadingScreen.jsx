@@ -25,7 +25,7 @@ export default function LoadingScreen({ onEnter }) {
         src={blackSide}
         alt=""
         style={{
-          position: 'absolute', left: '16.9%', top: '92.5%',
+          position: 'absolute', left: '16.9%', top: '88%',
           transform: 'translate(-50%, -50%) rotate(15.39deg)',
           width: 'clamp(260px, 51vw, 720px)',
           height: 'auto',
@@ -41,7 +41,7 @@ export default function LoadingScreen({ onEnter }) {
         src={whiteSide}
         alt=""
         style={{
-          position: 'absolute', left: '85.1%', top: '88.5%',
+          position: 'absolute', left: '85.1%', top: '84%',
           transform: 'translate(-50%, -50%) rotate(26.5deg)',
           width: 'clamp(260px, 53vw, 750px)',
           height: 'auto',
