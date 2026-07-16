@@ -18,15 +18,17 @@ export default function LoadingScreen({ onEnter }) {
       position: 'relative',
       overflow: 'hidden',
     }}>
-      {/* Black-pieces chariot, bottom left, tilted, sitting into the strip */}
+      {/* Black-pieces chariot — position/size/rotation derived from Figma's
+          own rotated-bounding-box math (image renders at natural size, then
+          rotates around its own center — not a mirror of the white side). */}
       <img
         src={blackSide}
         alt=""
         style={{
-          position: 'absolute', bottom: 'clamp(-10px, 1vh, 24px)', left: 'clamp(-40px, -3vw, 10px)',
-          width: 'clamp(340px, 46vw, 620px)',
+          position: 'absolute', left: '16.9%', top: '84.6%',
+          transform: 'translate(-50%, -50%) rotate(15.39deg)',
+          width: 'clamp(260px, 51vw, 720px)',
           height: 'auto',
-          transform: 'rotate(15.39deg)',
           objectFit: 'contain',
           pointerEvents: 'none',
           userSelect: 'none',
@@ -34,15 +36,15 @@ export default function LoadingScreen({ onEnter }) {
         }}
       />
 
-      {/* White-pieces chariot, bottom right, tilted, sitting into the strip */}
+      {/* White-pieces chariot — same derivation, its own distinct rotation/scale. */}
       <img
         src={whiteSide}
         alt=""
         style={{
-          position: 'absolute', bottom: 'clamp(-10px, 1vh, 24px)', right: 'clamp(-30px, -2vw, 10px)',
-          width: 'clamp(300px, 40vw, 540px)',
+          position: 'absolute', left: '85.1%', top: '80.5%',
+          transform: 'translate(-50%, -50%) rotate(26.5deg)',
+          width: 'clamp(260px, 53vw, 750px)',
           height: 'auto',
-          transform: 'rotate(26.5deg)',
           objectFit: 'contain',
           pointerEvents: 'none',
           userSelect: 'none',
@@ -53,9 +55,9 @@ export default function LoadingScreen({ onEnter }) {
       {/* Horizontal checker strip along the very bottom */}
       <div style={checkerStripStyle} />
 
-      {/* Title, single line — "Game of" filled, "Chess" outlined */}
+      {/* Title, single line — "Game of" filled, "Chess" outlined — centered */}
       <div style={{
-        position: 'absolute', top: 'clamp(60px, 23vh, 210px)', left: 'clamp(20px, 8.75vw, 130px)',
+        position: 'absolute', top: 'clamp(60px, 23vh, 210px)', left: '50%', transform: 'translateX(-50%)',
         zIndex: 2,
         display: 'flex', alignItems: 'baseline', gap: 'clamp(8px, 1.2vw, 20px)',
         whiteSpace: 'nowrap',
