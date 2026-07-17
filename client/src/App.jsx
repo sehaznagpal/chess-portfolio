@@ -7,7 +7,11 @@ import ResultScreen from './screens/ResultScreen.jsx';
 import { applyTheme } from './lib/themes.js';
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
-const socket = io(SERVER_URL, { autoConnect: false });
+// Explicitly prefer WebSocket over the default polling-then-upgrade dance —
+// without this, some environments never upgrade off HTTP long-polling, which
+// turns every round trip (room creation, moves) into a multi-hundred-ms poll
+// cycle instead of a near-instant push.
+const socket = io(SERVER_URL, { autoConnect: false, transports: ['websocket', 'polling'] });
 
 const INITIAL_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 const SESSION_TTL = 60 * 60 * 1000; // 60 minutes
