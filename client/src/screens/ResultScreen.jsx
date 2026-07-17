@@ -55,10 +55,11 @@ export default function ResultScreen({ outcome, reason, onPlayAgain, onHome, wai
             disabled={waitingForRematch}
             style={{
               fontSize: 18, padding: '6px 16px',
-              background: waitingForRematch ? 'rgba(193,255,64,0.5)' : 'var(--accent)',
+              background: '#121212',
+              color: '#f5f5f5',
               border: '1px solid #121212',
               borderRadius: 0,
-              opacity: waitingForRematch ? 0.7 : 1,
+              opacity: waitingForRematch ? 0.6 : 1,
             }}
           >
             {waitingForRematch ? 'Waiting…' : 'Play Again'}
