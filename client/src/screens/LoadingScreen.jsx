@@ -104,7 +104,7 @@ export default function LoadingScreen({ onEnter }) {
           color: '#f5f5f5',
           whiteSpace: 'nowrap',
         }}>
-          CHECKMATE IS COMING
+          START GAME
         </span>
       </button>
     </div>
