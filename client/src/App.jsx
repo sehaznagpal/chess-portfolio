@@ -165,10 +165,26 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const onRoomCreated = ({ code }) => {
+    // The creator enters the game screen immediately, solo — the board
+    // shows in the starting position and "Waiting for opponent…" takes the
+    // opponent name's place until someone joins (see onGameStart below,
+    // which fires independently of who got there first).
+    const onRoomCreated = ({ code, name }) => {
+      setPlayerColor('white');
+      setPlayerName(name);
+      setOpponentName('');
+      setFen(INITIAL_FEN);
+      setTurn('w');
+      setMyPoints(0);
+      setOpponentPoints(0);
+      setMyCaptured([]);
+      setOpponentCaptured([]);
+      setLastMove(null);
+      setGameResult(null);
+      setWaitingForRematch(false);
       setRoomCode(code);
       setIsWaitingForOpponent(true);
-      // Stay on the home screen — the room code now shows inline there.
+      setScreen('game');
     };
 
     const onJoinError = ({ message }) => showToast(message);
@@ -326,6 +342,8 @@ export default function App() {
     socket.emit('go_home');
     setIsWaitingForOpponent(false);
     setRoomCode('');
+    setScreen('home');
+    resetGame();
   };
 
   const handlePlayAgain = () => {
@@ -351,9 +369,6 @@ export default function App() {
           onThemeChange={handleThemeChange}
           pieceStyle={pieceStyle}
           onPieceStyleChange={handlePieceStyleChange}
-          isWaiting={isWaitingForOpponent}
-          roomCode={roomCode}
-          onCancelWaiting={handleCancelWaiting}
         />
       )}
       {screen === 'game' && (
@@ -371,6 +386,9 @@ export default function App() {
           lastMove={lastMove}
           onResign={handleResign}
           pieceStyle={pieceStyle}
+          waitingForOpponent={isWaitingForOpponent}
+          roomCode={roomCode}
+          onCancelWaiting={handleCancelWaiting}
         />
       )}
       {screen === 'result' && gameResult && (

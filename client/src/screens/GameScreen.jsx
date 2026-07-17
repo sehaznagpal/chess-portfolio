@@ -19,6 +19,7 @@ export default function GameScreen({
   socket, fen, playerColor, playerName, opponentName,
   myPoints, opponentPoints, myCaptured, opponentCaptured,
   turn, lastMove, onResign, pieceStyle,
+  waitingForOpponent, roomCode, onCancelWaiting,
 }) {
   const [showHelp, setShowHelp] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -29,8 +30,16 @@ export default function GameScreen({
   const [legalMoves, setLegalMoves] = useState([]);
   const [illegalMsg, setIllegalMsg] = useState(null);
   const [pendingPromotion, setPendingPromotion] = useState(null);
+  const [codeCopied, setCodeCopied] = useState(false);
   const illegalTimer = useRef(null);
   const settingsRef = useRef(null);
+
+  const copyRoomCode = () => {
+    navigator.clipboard.writeText(roomCode).then(() => {
+      setCodeCopied(true);
+      setTimeout(() => setCodeCopied(false), 2000);
+    });
+  };
 
   const chess = new Chess(fen);
 
@@ -53,6 +62,7 @@ export default function GameScreen({
   }, []);
 
   const handleSquareClick = useCallback((sq) => {
+    if (waitingForOpponent) return;
     const myTurn = (playerColor === 'white' && chess.turn() === 'w') ||
                    (playerColor === 'black' && chess.turn() === 'b');
 
@@ -89,7 +99,7 @@ export default function GameScreen({
     if (moves.length === 0) return;
     setSelectedSq(sq);
     setLegalMoves(moves);
-  }, [selectedSq, legalMoves, fen, playerColor, chess, socket]);
+  }, [selectedSq, legalMoves, fen, playerColor, chess, socket, waitingForOpponent]);
 
   const handlePromotion = (promotionPiece) => {
     if (!pendingPromotion) return;
@@ -128,8 +138,8 @@ export default function GameScreen({
           {/* Resign X — top left */}
           <div style={{ width: 100, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 6 }}>
             <button
-              onClick={() => setShowResignConfirm(true)}
-              title="Resign"
+              onClick={() => (waitingForOpponent ? onCancelWaiting() : setShowResignConfirm(true))}
+              title={waitingForOpponent ? 'Cancel' : 'Resign'}
               style={{
                 background: 'transparent', border: 'none',
                 color: 'var(--ink)', padding: 0,
@@ -151,7 +161,7 @@ export default function GameScreen({
             fontFamily: 'Atelier, sans-serif', fontSize: 'clamp(16px, 2.5vw, 30px)', textTransform: 'uppercase', color: 'var(--ink)',
             overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
           }}>
-            {opponentName || 'Opponent'}
+            {waitingForOpponent ? 'Waiting for opponent…' : (opponentName || 'Opponent')}
           </span>
 
           {/* Right: ? and gear */}
@@ -186,9 +196,21 @@ export default function GameScreen({
           <CapturedPieces pieces={opponentCaptured} pieceStyle={pieceStyle} />
         </div>
 
-        {/* Turn indicator */}
+        {/* Turn indicator — becomes the room-code/invite prompt while solo */}
         <div style={{ height: 18, marginBottom: 3, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          {isCheckmateNow
+          {waitingForOpponent ? (
+            <div
+              onClick={copyRoomCode}
+              title="Click to copy"
+              style={{
+                fontFamily: 'monospace', fontSize: 13, color: 'var(--ink)',
+                display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer',
+              }}
+            >
+              <span style={{ fontWeight: 700 }}>{roomCode}</span>
+              <span style={{ opacity: 0.6 }}>{codeCopied ? 'Copied!' : '📋 share to invite'}</span>
+            </div>
+          ) : isCheckmateNow
             ? <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: 12, color: 'var(--ink)', fontWeight: 700, letterSpacing: 0.5 }}>CHECKMATE</span>
             : isCheckNow
               ? <span style={{ fontFamily: 'Poppins, sans-serif', fontSize: 12, color: 'var(--ink)', fontWeight: 700, letterSpacing: 0.5 }}>CHECK</span>
@@ -199,7 +221,7 @@ export default function GameScreen({
         </div>
 
         {/* Board */}
-        <div style={{ position: 'relative', flexShrink: 0 }}>
+        <div style={{ position: 'relative', flexShrink: 0, opacity: waitingForOpponent ? 0.5 : 1, pointerEvents: waitingForOpponent ? 'none' : 'auto' }}>
           <Board
             fen={fen}
             playerColor={playerColor}

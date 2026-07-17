@@ -100,7 +100,7 @@ io.on('connection', (socket) => {
     };
     rooms.set(code, room);
     socket.join(code);
-    socket.emit('room_created', { code });
+    socket.emit('room_created', { code, name: room.players[0].name });
   });
 
   socket.on('join_room', ({ name, code }) => {

@@ -21,13 +21,11 @@ const checkerStripStyle = {
 
 export default function HomeScreen({
   socket, theme, onThemeChange, pieceStyle, onPieceStyleChange,
-  isWaiting, roomCode, onCancelWaiting,
 }) {
   const [mode, setMode] = useState('create');
   const [name, setName] = useState('');
   const [code, setCode] = useState('');
   const [error, setError] = useState('');
-  const [copied, setCopied] = useState(false);
 
   const switchMode = (m) => {
     setMode(m);
@@ -36,6 +34,10 @@ export default function HomeScreen({
     setError('');
   };
 
+  // Both Create and Join drop the player straight into the game screen —
+  // the creator sees the board immediately with "Waiting for opponent…" in
+  // place of the opponent's name until someone joins, independent of who
+  // got there first (see App.jsx's onRoomCreated/onGameStart).
   const handleSubmit = () => {
     const trimmedName = name.trim();
     if (!trimmedName) { setError('Please enter your name.'); return; }
@@ -49,13 +51,6 @@ export default function HomeScreen({
       setError('');
       socket.emit('create_room', { name: trimmedName });
     }
-  };
-
-  const copyCode = () => {
-    navigator.clipboard.writeText(roomCode).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
   };
 
   return (
@@ -94,7 +89,6 @@ export default function HomeScreen({
           }}>
             <button
               onClick={() => switchMode('create')}
-              disabled={isWaiting}
               style={{
                 flex: 1, border: 'none', padding: 'clamp(8px, 1.4vw, 12px) 0',
                 fontFamily: 'Atelier, sans-serif',
@@ -107,7 +101,6 @@ export default function HomeScreen({
             </button>
             <button
               onClick={() => switchMode('join')}
-              disabled={isWaiting}
               style={{
                 flex: 1, borderTop: 'none', borderRight: 'none', borderBottom: 'none',
                 borderLeft: '2px solid #f5f5f5', padding: 'clamp(8px, 1.4vw, 12px) 0',
@@ -130,7 +123,6 @@ export default function HomeScreen({
               onChange={e => setName(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleSubmit()}
               maxLength={24}
-              disabled={isWaiting}
               style={{ background: 'transparent', borderColor: '#f5f5f5', color: '#f5f5f5' }}
             />
             <input
@@ -141,29 +133,12 @@ export default function HomeScreen({
               onChange={e => setCode(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleSubmit()}
               maxLength={32}
-              disabled={isWaiting}
               style={{ background: 'transparent', borderColor: '#f5f5f5', color: '#f5f5f5', textTransform: 'lowercase' }}
             />
 
-            {mode === 'create' && (isWaiting ? (
-              /* Real room code/link now that one exists, shown right here
-                 instead of navigating to a separate screen. */
-              <div
-                onClick={copyCode}
-                title="Click to copy"
-                style={{
-                  fontFamily: 'monospace', fontSize: 16, color: '#f5f5f5',
-                  padding: '8px 10px', display: 'flex', alignItems: 'center', gap: 8,
-                  cursor: 'pointer', border: '1px solid rgba(245,245,245,0.4)',
-                  flexWrap: 'wrap',
-                }}
-              >
-                {roomCode}
-                <span style={{ fontSize: 13, opacity: 0.75 }}>{copied ? 'Copied!' : '📋 click to copy'}</span>
-              </div>
-            ) : (
-              /* Decorative placeholder — becomes the real code/link above
-                 once a room exists. */
+            {mode === 'create' && (
+              /* Decorative placeholder — the real room code now appears on
+                 the game screen itself, right after creating. */
               <div style={{
                 fontFamily: 'monospace', fontSize: 16, color: 'rgba(245,245,245,0.45)',
                 padding: '8px 10px', display: 'flex', alignItems: 'center', gap: 8,
@@ -171,41 +146,23 @@ export default function HomeScreen({
                 {'<Link>'}
                 <span style={{ fontSize: 13, opacity: 0.7 }}>appears after creating a room</span>
               </div>
-            ))}
+            )}
           </div>
 
           {error && (
             <p style={{ color: '#ff9b9b', fontFamily: 'Poppins, sans-serif', fontSize: 14, marginBottom: 8, position: 'relative', zIndex: 1 }}>{error}</p>
           )}
 
-          {isWaiting && (
-            <p style={{ fontFamily: 'Poppins, sans-serif', fontSize: 15, color: 'rgba(245,245,245,0.8)', margin: '0 0 8px', position: 'relative', zIndex: 1 }}>
-              Waiting for opponent…
-            </p>
-          )}
-
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: 'auto', paddingTop: 16, position: 'relative', zIndex: 1 }}>
-            {isWaiting ? (
-              <button
-                onClick={onCancelWaiting}
-                style={{
-                  fontSize: 'clamp(16px, 2.2vw, 20px)', padding: '8px 24px',
-                  background: 'transparent', color: '#f5f5f5', border: '1px solid #f5f5f5',
-                }}
-              >
-                Cancel
-              </button>
-            ) : (
-              <button
-                onClick={handleSubmit}
-                style={{
-                  fontSize: 'clamp(16px, 2.2vw, 20px)', padding: '8px 24px',
-                  background: '#f5f5f5', color: '#161616', border: '1px solid #f5f5f5',
-                }}
-              >
-                {mode === 'join' ? 'Join Room' : 'Create Room'}
-              </button>
-            )}
+            <button
+              onClick={handleSubmit}
+              style={{
+                fontSize: 'clamp(16px, 2.2vw, 20px)', padding: '8px 24px',
+                background: '#f5f5f5', color: '#161616', border: '1px solid #f5f5f5',
+              }}
+            >
+              {mode === 'join' ? 'Join Room' : 'Create Room'}
+            </button>
           </div>
         </div>
 
